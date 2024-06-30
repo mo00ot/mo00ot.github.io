@@ -1,5 +1,5 @@
-														Mo00ot 
-
+	Mo00ot 
+														
 This script install Winget if is not installed on windows and the programs pre-configurated.
 
 Preconfigurated with Firefox ESR, Notepad++, Advanced IP Scanner, 7-Zip, WinSCP, PuTTY, NordVPN and HWMonitor.
