@@ -1,4 +1,4 @@
-		**Mo00ot**
+													Mo00ot 
 
 This script install Winget if is not installed on windows and the programs pre-configurated.
 
@@ -12,8 +12,8 @@ Read the ReadME to use it or mod it with programs you like.
 - [x] Work in Windows 10/11
 - [] Work in Windows Server
 
-> [!CAUTION]
-> Advises about risks or negative outcomes of certain actions.
+> [!WARNING]
+> if Winget.bat stacked on calling wingetdownloader.bat, close it and open wingetdownloader.bat.
 
 **Download**
 - § [Telegram](https://t.me/mo00othub/3)
