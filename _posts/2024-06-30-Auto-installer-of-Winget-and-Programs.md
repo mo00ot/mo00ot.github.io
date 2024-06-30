@@ -1,8 +1,7 @@
-Theme: [post]
-Title: [auto]
-by: Mo00ot 
+Mo00ot
+- [x] Require Admin user
+- [x] Some version of Windows require first windows update to use or install winget
+- [x] Work in Windows 10/11
+- [] Work in Windows Server
 
-- test1234
-
-
-2024-06-30 10:52:20
+> 2024-06-30 10:52:20
