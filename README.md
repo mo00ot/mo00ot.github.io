@@ -1,4 +1,4 @@
-# Mo00otHUB
+# Index
 > Join the Telegram channel.
 - § [About](https://github.com/mo00ot)
 - § [TelegramHUB](https://t.me/mo00othub) Stable and Beta release.

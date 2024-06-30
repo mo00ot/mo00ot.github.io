@@ -1,4 +1,4 @@
-													Mo00ot 
+															Mo00ot 
 
 This script install Winget if is not installed on windows and the programs pre-configurated.
 
@@ -19,6 +19,5 @@ Read the ReadME to use it or mod it with programs you like.
 - § [Telegram](https://t.me/mo00othub/3)
 - § [GitHub Release](https://github.com/mo00ot/winget-Auto-installer-of-Winget-and-Programs/releases/tag/winget)
 - § [GitHub Repositories](https://github.com/mo00ot/winget-Auto-installer-of-Winget-and-Programs)
-- § []()
 
 for bugs contact mootobject@duck.com <Object: Auto-installer-of-Winget-and-Programs-BUGS >
