@@ -1,4 +1,4 @@
-															Mo00ot 
+														Mo00ot 
 
 This script install Winget if is not installed on windows and the programs pre-configurated.
 
