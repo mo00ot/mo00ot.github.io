@@ -11,4 +11,4 @@ Read the ReadME to use it.
 - § [Telegram](https://t.me/mo00othub/9)
 - § [GitHub Profile](https://github.com/mo00ot/)
 
-for bugs contact mootobject@duck.com object: <BWP-BUGS>
+for bugs contact mootobject@duck.com <Object: BWP-BUGS>
