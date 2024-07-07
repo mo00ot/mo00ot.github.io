@@ -8,7 +8,7 @@ Read the ReadME to use it.
 > Set /p command not accept WiFi SSID with space/s in the name. Created command "all" to export all profiles.
 
 **Download**
-- § [Direct](https://mo00ot.github.io/_posts/BWP by mo00ot.zip)
+- § [Direct](https://raw.githubusercontent.com/mo00ot/mo00ot.github.io/main/_posts/BWP%20by%20mo00ot.zip)
 - § [Telegram](https://t.me/mo00othub/9)
 - § [GitHub Profile](https://github.com/mo00ot/)
 
