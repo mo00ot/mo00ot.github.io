@@ -8,6 +8,7 @@ Read the ReadME to use it.
 > Set /p command not accept WiFi SSID with space/s in the name. Created command "all" to export all profiles.
 
 **Download**
+- § [Direct](https://github.com/0aaa9d97-b04a-46dc-a11a-57fc76e31e28)
 - § [Telegram](https://t.me/mo00othub/9)
 - § [GitHub Profile](https://github.com/mo00ot/)
 
