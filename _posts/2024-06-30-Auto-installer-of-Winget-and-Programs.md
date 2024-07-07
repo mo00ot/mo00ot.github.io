@@ -17,7 +17,8 @@ Read the ReadME to use it or mod it with programs you like.
 > if Winget.bat stacked on calling wingetdownloader.bat, close it and open wingetdownloader.bat.
 
 **Download**
-- § [Telegram](https://t.me/mo00othub/3)
+- § [Direct](https://codeload.github.com/mo00ot/winget-Auto-installer-of-Winget-and-Programs/zip/refs/heads/main)
+- § [*Telegram](https://t.me/mo00othub/3)
 - § [GitHub Release](https://github.com/mo00ot/winget-Auto-installer-of-Winget-and-Programs/releases/tag/winget)
 - § [GitHub Repositories](https://github.com/mo00ot/winget-Auto-installer-of-Winget-and-Programs)
 
