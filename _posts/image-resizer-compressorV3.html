@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridimensionatore e Compressore Immagini</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #f0f0ff;
+            border-color: #764ba2;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .controls {
+            display: none;
+            margin-bottom: 30px;
+        }
+        
+        .controls.active {
+            display: block;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        select, input[type="range"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        input[type="range"] {
+            padding: 0;
+        }
+        
+        .slider-value {
+            text-align: right;
+            color: #667eea;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .custom-dimensions {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .custom-dimensions.active {
+            display: grid;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        button.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .images-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .images-grid.active {
+            display: grid;
+        }
+        
+        .image-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .image-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .image-info p {
+            margin: 5px 0;
+        }
+        
+        .image-info strong {
+            color: #667eea;
+        }
+        
+        .image-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .image-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.done {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .stats {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .stats.active {
+            display: block;
+        }
+        
+        .stats h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Ridimensiona e Comprimi Immagini Multiple</h1>
+        
+        <div class="upload-area" id="uploadArea">
+            <h2>📁 Trascina qui le tue immagini</h2>
+            <p>oppure clicca per selezionare (anche multiple)</p>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+        </div>
+        
+        <div class="controls" id="controls">
+            <div class="control-group">
+                <label for="preset">Dimensioni:</label>
+                <select id="preset">
+                    <optgroup label="🖥️ Desktop / Laptop">
+                        <option value="4k-landscape">4K UHD (3840×2160)</option>
+                        <option value="2k-landscape">2K QHD (2560×1440)</option>
+                        <option value="1080p-landscape">Full HD (1920×1080)</option>
+                        <option value="720p-landscape">HD (1280×720)</option>
+                        <option value="wxga">WXGA (1366×768)</option>
+                        <option value="xga">XGA (1024×768)</option>
+                    </optgroup>
+                    <optgroup label="📱 Mobile Portrait">
+                        <option value="mobile-4k">4K Mobile (2160×3840)</option>
+                        <option value="mobile-1080p">Full HD Mobile (1080×1920)</option>
+                        <option value="mobile-720p">HD Mobile (720×1280)</option>
+                        <option value="iphone-15-pro">iPhone 15 Pro (1179×2556)</option>
+                        <option value="iphone-14">iPhone 14 (1170×2532)</option>
+                        <option value="iphone-se">iPhone SE (750×1334)</option>
+                        <option value="samsung-s24">Samsung S24 Ultra (1440×3120)</option>
+                        <option value="samsung-a54">Samsung A54 (1080×2340)</option>
+                    </optgroup>
+                    <optgroup label="📱 Mobile Landscape">
+                        <option value="mobile-1080p-land">Full HD Mobile H (1920×1080)</option>
+                        <option value="mobile-720p-land">HD Mobile H (1280×720)</option>
+                    </optgroup>
+                    <optgroup label="📺 TV / Monitor">
+                        <option value="8k">8K UHD (7680×4320)</option>
+                        <option value="5k">5K (5120×2880)</option>
+                        <option value="cinema-4k">Cinema 4K (4096×2160)</option>
+                        <option value="ultrawide">UltraWide QHD (3440×1440)</option>
+                    </optgroup>
+                    <optgroup label="💻 Tablet">
+                        <option value="ipad-pro-12">iPad Pro 12.9" (2048×2732)</option>
+                        <option value="ipad-pro-11">iPad Pro 11" (1668×2388)</option>
+                        <option value="ipad-air">iPad Air (1640×2360)</option>
+                        <option value="ipad">iPad (1620×2160)</option>
+                        <option value="surface-pro">Surface Pro (2880×1920)</option>
+                    </optgroup>
+                    <optgroup label="🌐 Social Media">
+                        <option value="instagram-post">Instagram Post (1080×1080)</option>
+                        <option value="instagram-story">Instagram Story (1080×1920)</option>
+                        <option value="facebook-post">Facebook Post (1200×630)</option>
+                        <option value="facebook-cover">Facebook Cover (820×312)</option>
+                        <option value="twitter-post">X/Twitter Post (1200×675)</option>
+                        <option value="twitter-header">X/Twitter Header (1500×500)</option>
+                        <option value="youtube-thumb">YouTube Thumbnail (1280×720)</option>
+                        <option value="youtube-banner">YouTube Banner (2560×1440)</option>
+                        <option value="linkedin-post">LinkedIn Post (1200×627)</option>
+                        <option value="tiktok">TikTok (1080×1920)</option>
+                    </optgroup>
+                    <optgroup label="🎨 Web / Altro">
+                        <option value="web-hero">Web Hero (1920×600)</option>
+                        <option value="web-banner">Web Banner (728×90)</option>
+                        <option value="og-image">Open Graph (1200×630)</option>
+                        <option value="original">Mantieni originale</option>
+                        <option value="custom">Personalizzato</option>
+                    </optgroup>
+                </select>
+                
+                <div class="custom-dimensions" id="customDimensions">
+                    <div>
+                        <label for="customWidth">Larghezza (px):</label>
+                        <input type="number" id="customWidth" min="1" value="1920">
+                    </div>
+                    <div>
+                        <label for="customHeight">Altezza (px):</label>
+                        <input type="number" id="customHeight" min="1" value="1080">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="quality">Qualità Compressione:</label>
+                <input type="range" id="quality" min="1" max="100" value="85">
+                <div class="slider-value" id="qualityValue">85%</div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="processBtn">Elabora Tutte le Immagini</button>
+                <button id="downloadAllBtn" class="secondary">💾 Scarica Tutte (ZIP)</button>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats">
+            <h3>📊 Statistiche Totali</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalImages">0</div>
+                    <div class="stat-label">Immagini</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalOrigSize">0 MB</div>
+                    <div class="stat-label">Peso Originale</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalNewSize">0 MB</div>
+                    <div class="stat-label">Peso Finale</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalReduction">0%</div>
+                    <div class="stat-label">Riduzione</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="images-grid" id="imagesGrid"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const imagesGrid = document.getElementById('imagesGrid');
+        const preset = document.getElementById('preset');
+        const customDimensions = document.getElementById('customDimensions');
+        const quality = document.getElementById('quality');
+        const qualityValue = document.getElementById('qualityValue');
+        const processBtn = document.getElementById('processBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const stats = document.getElementById('stats');
+        
+        let images = [];
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleFiles(files);
+        });
+        
+        preset.addEventListener('change', () => {
+            customDimensions.classList.toggle('active', preset.value === 'custom');
+        });
+        
+        quality.addEventListener('input', () => {
+            qualityValue.textContent = quality.value + '%';
+        });
+        
+        function handleFiles(files) {
+            const imageFiles = files.filter(f => f.type.startsWith('image/'));
+            
+            if (imageFiles.length === 0) {
+                alert('Nessuna immagine valida selezionata');
+                return;
+            }
+            
+            images = [];
+            imagesGrid.innerHTML = '';
+            
+            imageFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const imageData = {
+                            id: index,
+                            file: file,
+                            originalWidth: img.width,
+                            originalHeight: img.height,
+                            originalSize: file.size,
+                            dataUrl: e.target.result,
+                            processed: false,
+                            blob: null
+                        };
+                        
+                        images.push(imageData);
+                        renderImageCard(imageData);
+                        
+                        if (images.length === imageFiles.length) {
+                            controls.classList.add('active');
+                            imagesGrid.classList.add('active');
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function renderImageCard(imageData) {
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            card.id = `card-${imageData.id}`;
+            
+            card.innerHTML = `
+                <img src="${imageData.dataUrl}" alt="Image ${imageData.id + 1}">
+                <div class="image-info">
+                    <p><strong>Originale:</strong> ${imageData.originalWidth}×${imageData.originalHeight}px</p>
+                    <p><strong>Peso:</strong> ${formatBytes(imageData.originalSize)}</p>
+                    <p id="new-info-${imageData.id}" style="display:none;"><strong>Elaborata:</strong> <span id="new-dims-${imageData.id}"></span></p>
+                    <p id="new-size-${imageData.id}" style="display:none;"><strong>Nuovo peso:</strong> <span id="size-val-${imageData.id}"></span></p>
+                </div>
+                <div class="image-actions">
+                    <button onclick="processImage(${imageData.id})">Elabora</button>
+                    <button onclick="downloadImage(${imageData.id})" style="display:none;" id="dl-btn-${imageData.id}">Scarica</button>
+                </div>
+                <div class="status" id="status-${imageData.id}" style="display:none;"></div>
+            `;
+            
+            imagesGrid.appendChild(card);
+        }
+        
+        window.processImage = function(id) {
+            const imageData = images.find(img => img.id === id);
+            if (!imageData) return;
+            
+            const statusEl = document.getElementById(`status-${id}`);
+            statusEl.style.display = 'block';
+            statusEl.className = 'status processing';
+            statusEl.textContent = 'Elaborazione...';
+            
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                let width, height;
+                
+                switch(preset.value) {
+                    case '1080p-landscape':
+                        width = 1920; height = 1080;
+                        break;
+                    case '1080p-portrait':
+                        width = 1080; height = 1920;
+                        break;
+                    case '720p-landscape':
+                        width = 1280; height = 720;
+                        break;
+                    case '720p-portrait':
+                        width = 720; height = 1280;
+                        break;
+                    case '4k-landscape':
+                        width = 3840; height = 2160;
+                        break;
+                    case '4k-portrait':
+                        width = 2160; height = 3840;
+                        break;
+                    case 'original':
+                        width = img.width; height = img.height;
+                        break;
+                    case 'custom':
+                        width = parseInt(document.getElementById('customWidth').value);
+                        height = parseInt(document.getElementById('customHeight').value);
+                        break;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                const qualityVal = quality.value / 100;
+                
+                canvas.toBlob((blob) => {
+                    imageData.blob = blob;
+                    imageData.processed = true;
+                    imageData.newWidth = width;
+                    imageData.newHeight = height;
+                    imageData.newSize = blob.size;
+                    
+                    document.getElementById(`new-info-${id}`).style.display = 'block';
+                    document.getElementById(`new-dims-${id}`).textContent = `${width}×${height}px`;
+                    document.getElementById(`new-size-${id}`).style.display = 'block';
+                    document.getElementById(`size-val-${id}`).textContent = formatBytes(blob.size);
+                    document.getElementById(`dl-btn-${id}`).style.display = 'block';
+                    
+                    statusEl.className = 'status done';
+                    statusEl.textContent = '✓ Completata';
+                    
+                    updateStats();
+                }, 'image/jpeg', qualityVal);
+            };
+            img.src = imageData.dataUrl;
+        };
+        
+        processBtn.addEventListener('click', () => {
+            processBtn.disabled = true;
+            processBtn.textContent = 'Elaborazione...';
+            
+            let completed = 0;
+            images.forEach(img => {
+                processImage(img.id);
+                setTimeout(() => {
+                    completed++;
+                    if (completed === images.length) {
+                        processBtn.disabled = false;
+                        processBtn.textContent = 'Elabora Tutte le Immagini';
+                    }
+                }, 100 * img.id);
+            });
+        });
+        
+        window.downloadImage = function(id) {
+            const imageData = images.find(img => img.id === id);
+            if (!imageData || !imageData.blob) return;
+            
+            const url = URL.createObjectURL(imageData.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `immagine_${id + 1}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+        
+        downloadAllBtn.addEventListener('click', async () => {
+            const processedImages = images.filter(img => img.processed);
+            
+            if (processedImages.length === 0) {
+                alert('Nessuna immagine elaborata da scaricare');
+                return;
+            }
+            
+            downloadAllBtn.disabled = true;
+            downloadAllBtn.textContent = 'Creazione ZIP...';
+            
+            const zip = new JSZip();
+            
+            processedImages.forEach((img, index) => {
+                zip.file(`immagine_${index + 1}.jpg`, img.blob);
+            });
+            
+            const content = await zip.generateAsync({type: 'blob'});
+            
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'immagini_elaborate.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            downloadAllBtn.disabled = false;
+            downloadAllBtn.textContent = '💾 Scarica Tutte (ZIP)';
+        });
+        
+        function updateStats() {
+            const processed = images.filter(img => img.processed);
+            
+            if (processed.length === 0) {
+                stats.classList.remove('active');
+                return;
+            }
+            
+            stats.classList.add('active');
+            
+            const totalOrig = processed.reduce((sum, img) => sum + img.originalSize, 0);
+            const totalNew = processed.reduce((sum, img) => sum + img.newSize, 0);
+            const reduction = ((1 - totalNew / totalOrig) * 100).toFixed(1);
+            
+            document.getElementById('totalImages').textContent = processed.length;
+            document.getElementById('totalOrigSize').textContent = formatBytes(totalOrig);
+            document.getElementById('totalNewSize').textContent = formatBytes(totalNew);
+            document.getElementById('totalReduction').textContent = reduction + '%';
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+    </script>
+</body>
+</html>
